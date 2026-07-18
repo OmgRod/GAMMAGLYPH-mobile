@@ -61,64 +61,64 @@ jobs:
             platforms/android/**/*.aab
 
 
-  ios:
-    name: Build iOS IPA
-    runs-on: macos-latest
+#   ios:
+#     name: Build iOS IPA
+#     runs-on: macos-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#         with:
+#           lfs: true
 
-      - name: Setup Git LFS
-        run: git lfs install
+#       - name: Setup Git LFS
+#         run: git lfs install
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 22
 
-      - name: Install Cordova
-        run: npm install -g cordova
+#       - name: Install Cordova
+#         run: npm install -g cordova
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Install dependencies
+#         run: npm install
 
-      - name: Add iOS platform
-        run: cordova platform add ios
+#       - name: Add iOS platform
+#         run: cordova platform add ios
 
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods
-          cd platforms/ios
-          pod install
+#       - name: Install CocoaPods
+#         run: |
+#           sudo gem install cocoapods
+#           cd platforms/ios
+#           pod install
 
-      - name: Build unsigned iOS app
-        run: |
-          cd platforms/ios
+#       - name: Build unsigned iOS app
+#         run: |
+#           cd platforms/ios
 
-          xcodebuild \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO
+#           xcodebuild \
+#             -workspace App.xcworkspace \
+#             -scheme App \
+#             -configuration Release \
+#             -sdk iphoneos \
+#             -derivedDataPath build \
+#             CODE_SIGNING_ALLOWED=NO \
+#             CODE_SIGNING_REQUIRED=NO
 
-      - name: Verify app exists
-        run: |
-          ls -la platforms/ios/build/Build/Products/Release-iphoneos/
+#       - name: Verify app exists
+#         run: |
+#           ls -la platforms/ios/build/Build/Products/Release-iphoneos/
 
-      - name: Create IPA
-        run: |
-          mkdir Payload
-          cp -R platforms/ios/build/Build/Products/Release-iphoneos/App.app Payload/
-          zip -r GAMMAGLYPH.ipa Payload
+#       - name: Create IPA
+#         run: |
+#           mkdir Payload
+#           cp -R platforms/ios/build/Build/Products/Release-iphoneos/App.app Payload/
+#           zip -r GAMMAGLYPH.ipa Payload
 
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
-        with:
-          name: GAMMAGLYPH-iOS-IPA
-          path: GAMMAGLYPH.ipa
+#       - name: Upload IPA
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: GAMMAGLYPH-iOS-IPA
+#           path: GAMMAGLYPH.ipa
