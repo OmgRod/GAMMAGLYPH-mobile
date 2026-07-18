@@ -85,20 +85,36 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install CocoaPods
-        run: sudo gem install cocoapods
-
       - name: Add iOS platform
         run: cordova platform add ios
 
-      - name: Build iOS device app
+      - name: Install CocoaPods
         run: |
-            cordova build ios --device --release -- --codeSignIdentity="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          sudo gem install cocoapods
+          cd platforms/ios
+          pod install
+
+      - name: Build unsigned iOS app
+        run: |
+          cd platforms/ios
+
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Verify app exists
+        run: |
+          ls -la platforms/ios/build/Build/Products/Release-iphoneos/
 
       - name: Create IPA
         run: |
-          mkdir -p Payload
-          cp -R platforms/ios/build/device/*.app Payload/
+          mkdir Payload
+          cp -R platforms/ios/build/Build/Products/Release-iphoneos/App.app Payload/
           zip -r GAMMAGLYPH.ipa Payload
 
       - name: Upload IPA
