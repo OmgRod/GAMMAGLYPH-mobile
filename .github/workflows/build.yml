@@ -44,7 +44,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: GAMMAGLYPH-Android
-          path: platforms/android/app/build/outputs/apk/release/*.apk
+          path: |
+            platforms/android/**/*.apk
 
 
   ios:
