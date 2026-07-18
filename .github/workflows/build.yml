@@ -93,7 +93,7 @@ jobs:
 
       - name: Build iOS device app
         run: |
-          cordova build ios --device --release --no-sign
+            cordova build ios --device --release -- --codeSignIdentity="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
       - name: Create IPA
         run: |
